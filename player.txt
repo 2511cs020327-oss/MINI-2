@@ -1,0 +1,136 @@
+import java.util.Scanner;
+
+class Player {
+    int lives = 3;
+
+    void loseLife() {
+        lives--;
+    }
+
+    boolean hasLives() {
+        return lives > 0;
+    }
+}
+
+class Room {
+    String question;
+    String[] options;
+    char answer;
+
+    Room(String question, String[] options, char answer) {
+        this.question = question;
+        this.options = options;
+        this.answer = Character.toUpperCase(answer);
+    }
+
+    boolean play(Scanner sc) {
+        System.out.println("\n" + question);
+
+        for (String option : options) {
+            System.out.println(option);
+        }
+
+        System.out.print("Enter your answer (A/B/C/D): ");
+        char choice = Character.toUpperCase(sc.next().charAt(0));
+
+        if (choice == answer) {
+            System.out.println("✅ Correct! Door Unlocked.");
+            return true;
+        } else {
+            System.out.println("❌ Wrong Answer!");
+            return false;
+        }
+    }
+}
+
+public class EscapeRoomGame {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        Player player = new Player();
+
+        Room[] rooms = {
+            new Room(
+                "Room 1: Which keyword is used to inherit a class in Java?",
+                new String[]{
+                    "A. implements",
+                    "B. extends",
+                    "C. import",
+                    "D. package"
+                },
+                'B'
+            ),
+
+            new Room(
+                "Room 2: Which loop executes at least once?",
+                new String[]{
+                    "A. for",
+                    "B. while",
+                    "C. do-while",
+                    "D. switch"
+                },
+                'C'
+            ),
+
+            new Room(
+                "Room 3: Which OOP concept allows one method to have different forms?",
+                new String[]{
+                    "A. Encapsulation",
+                    "B. Inheritance",
+                    "C. Polymorphism",
+                    "D. Abstraction"
+                },
+                'C'
+            )
+        };
+
+        int currentRoom = 0;
+
+        while (player.hasLives() && currentRoom < rooms.length) {
+
+            System.out.println("\n==============================");
+            System.out.println(" ESCAPE ROOM GAME");
+            System.out.println("==============================");
+            System.out.println("Lives Left : " + player.lives);
+            System.out.println("1. Enter Next Room");
+            System.out.println("2. Exit");
+            System.out.print("Choose: ");
+
+            int choice;
+
+            try {
+                choice = sc.nextInt();
+            } catch (Exception e) {
+                System.out.println("Invalid Input!");
+                sc.nextLine();
+                continue;
+            }
+
+            1
+            if (choice == 1) {
+                if (rooms[currentRoom].play(sc)) {
+                    currentRoom++;
+                } else {
+                    player.loseLife();
+                    System.out.println("Lives Remaining: " + player.lives);
+                }
+            } else if (choice == 2) {
+                System.out.println("Thanks for playing!");
+                break;
+            } else {
+                System.out.println("Please choose 1 or 2.");
+            }
+        }
+
+        if (currentRoom == rooms.length) {
+            System.out.println("\n🎉 Congratulations!");
+            System.out.println("You solved all 3 puzzles and escaped the room!");
+        } else if (!player.hasLives()) {
+            System.out.println("\n💀 Game Over!");
+            System.out.println("You ran out of lives.");
+        }
+
+        sc.close();
+    }
+}
+
